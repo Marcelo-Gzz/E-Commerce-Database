@@ -4,6 +4,7 @@ small relational database for an online store.
 
 ERD
 
+```mermaid
 erDiagram
     USERS {
         INT      user_id PK
