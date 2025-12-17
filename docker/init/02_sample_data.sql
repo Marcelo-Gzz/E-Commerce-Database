@@ -39,18 +39,10 @@ INSERT INTO orders (user_id, status, total_amount, shipping_address, billing_add
 (4, 'PENDING',  89.95, '77 Lake Dr, Dallas, TX',  '77 Lake Dr, Dallas, TX',  CURRENT_TIMESTAMP - INTERVAL '1 day');
 
 -- ORDER ITEMS
--- Order 1 (user 1): 2 tees + 1 cap  -> 2*19.99 + 18.00 = 57.98 (but order total is 89.97)
--- We'll make it: 1 Hoodie (49.99) + 2 Tees (2*19.99) = 89.97
 INSERT INTO order_items (order_id, product_id, quantity, unit_price, line_total) VALUES
 (1, 2, 1, 49.99, 49.99),
 (1, 1, 2, 19.99, 39.98);
 
--- Order 2 (user 2): Joggers + Socks + Bottle -> 44.50 + 12.99 + 24.00 = 81.49 (but total is 67.99)
--- We'll make it: Hoodie (49.99) + Socks (12.99) + Cap (5.01? no)
--- Better: Hoodie 49.99 + Socks 12.99 + (Classic Tee 1*5.01?) not allowed; keep simple:
--- Set items to match 67.99: Classic Tee (19.99) + Cap (18.00) + Bottle (24.00) + Socks (5.??) no
--- Let's match 67.99 using: Cap 18.00 + Bottle 24.00 + Socks 12.99 + Tee 12.?? no
--- Instead we keep item prices exact and update total_amount later with a query. (common in seeding)
 
 INSERT INTO order_items (order_id, product_id, quantity, unit_price, line_total) VALUES
 (2, 3, 1, 44.50, 44.50),
@@ -70,7 +62,6 @@ INSERT INTO order_items (order_id, product_id, quantity, unit_price, line_total)
 INSERT INTO order_items (order_id, product_id, quantity, unit_price, line_total) VALUES
 (5, 7, 1, 89.95, 89.95);
 
--- Fix totals to match order_items (good practice)
 UPDATE orders o
 SET total_amount = x.sum_total
 FROM (
